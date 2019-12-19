@@ -61,6 +61,7 @@ export default {
         if (isOK) {
           this.$axios.post('/authorizations', this.formData).then(res => {
             window.localStorage.setItem('user-token', res.data.data.token)
+            this.$router.push('/home')
           }).catch(() => {
             this.$message({
               type: 'warning',

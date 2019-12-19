@@ -5,11 +5,11 @@
               <img src="../../assets/img/logo_index.png" alt="">
           </div>
           <el-form :model="formData" :rules="formrules" ref="myform">
-            <el-form-item prop='phoneNum'>
-                <el-input placeholder="请输入手机号" v-model="formData.phoneNum"></el-input>
+            <el-form-item prop='mobile'>
+                <el-input placeholder="请输入手机号" v-model="formData.mobile"></el-input>
             </el-form-item>
-            <el-form-item prop='verify'>
-                <el-input placeholder="请输入验证码" style="width:65%" v-model="formData.verify"></el-input>
+            <el-form-item prop='code'>
+                <el-input placeholder="请输入验证码" style="width:65%" v-model="formData.code"></el-input>
                 <el-button plain style="float:right">发送验证码</el-button>
             </el-form-item>
             <el-form-item prop='check'>
@@ -28,17 +28,17 @@ export default {
   data () {
     return {
       formData: {
-        phoneNum: '',
-        verify: '',
+        mobile: '',
+        code: '',
         check: false
       },
       formrules: {
-        phoneNum: [{
+        mobile: [{
           required: true, message: '请输入手机号'
         }, {
           pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号'
         }],
-        verify: [{
+        code: [{
           required: true, message: '请输入验证码'
         }, {
           pattern: /^\d{6}$/, message: '验证码为6位数字'
@@ -57,9 +57,16 @@ export default {
   },
   methods: {
     submit () {
-      this.$refs.myform.validate(function (isOK) {
+      this.$refs.myform.validate((isOK) => {
         if (isOK) {
-          alert('校验成功')
+          this.$axios.post('/authorizations', this.formData).then(res => {
+            window.localStorage.setItem('user-token', res.data.data.token)
+          }).catch(() => {
+            this.$message({
+              type: 'warning',
+              message: '输入信息有误，请重新输入！'
+            })
+          })
         }
       })
     }

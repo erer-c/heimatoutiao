@@ -4,19 +4,19 @@
           <div class="img">
               <img src="../../assets/img/logo_index.png" alt="">
           </div>
-          <el-form>
-            <el-form-item>
-                <el-input placeholder="请输入手机号"></el-input>
+          <el-form :model="formData" :rules="formrules" ref="myform">
+            <el-form-item prop='phoneNum'>
+                <el-input placeholder="请输入手机号" v-model="formData.phoneNum"></el-input>
             </el-form-item>
-            <el-form-item>
-                <el-input placeholder="请输入验证码" style="width:65%"></el-input>
+            <el-form-item prop='verify'>
+                <el-input placeholder="请输入验证码" style="width:65%" v-model="formData.verify"></el-input>
                 <el-button plain style="float:right">发送验证码</el-button>
             </el-form-item>
-            <el-form-item>
-                <el-checkbox v-model="checked">我已阅读并同意用户协议和隐私条款</el-checkbox>
+            <el-form-item prop='check'>
+                <el-checkbox v-model="formData.check">我已阅读并同意用户协议和隐私条款</el-checkbox>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width:100%">登录</el-button>
+                <el-button type="primary" style="width:100%" @click.prevent="submit">登录</el-button>
             </el-form-item>
           </el-form>
     </el-card>
@@ -25,7 +25,45 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      formData: {
+        phoneNum: '',
+        verify: '',
+        check: false
+      },
+      formrules: {
+        phoneNum: [{
+          required: true, message: '请输入手机号'
+        }, {
+          pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号'
+        }],
+        verify: [{
+          required: true, message: '请输入验证码'
+        }, {
+          pattern: /^\d{6}$/, message: '验证码为6位数字'
+        }],
+        check: [{
+          validator (rule, value, callback) {
+            if (value) {
+              callback()
+            } else {
+              callback(new Error('您需要先勾选协议'))
+            }
+          }
+        }]
+      }
+    }
+  },
+  methods: {
+    submit () {
+      this.$refs.myform.validate(function (isOK) {
+        if (isOK) {
+          alert('校验成功')
+        }
+      })
+    }
+  }
 }
 </script>
 

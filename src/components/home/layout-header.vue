@@ -6,9 +6,9 @@
       </el-col>
       <el-col :span='12' class="right">
           <el-row type='flex' justify='end' align='middle'>
-              <img src="../../assets/img/qzl.jpeg" alt="">
+              <img :src="userInfo.photo?userInfo.photo:defaultImg" alt="">
               <el-dropdown>
-                  <span>凡人ing<i class="el-icon-arrow-down el-icon--right"></i></span>
+                  <span>{{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i></span>
                   <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>个人信息</el-dropdown-item>
                       <el-dropdown-item>git地址</el-dropdown-item>
@@ -22,7 +22,23 @@
 
 <script>
 export default {
-
+  data () {
+    return {
+      userInfo: {},
+      defaultImg: require('../../assets/img/qzl.jpeg')
+    }
+  },
+  created () {
+    var token = localStorage.getItem('user-token')
+    this.$axios({
+      url: '/user/profile',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).then(res => {
+      this.userInfo = res.data.data
+    })
+  }
 }
 </script>
 

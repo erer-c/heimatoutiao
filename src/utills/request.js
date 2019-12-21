@@ -5,7 +5,7 @@ axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'// 设置接�
 // 拦截器
 axios.interceptors.request.use(function (config) {
   let token = window.localStorage.getItem('user-token')
-  config.Authorization = `Bearer ${token}`
+  config.headers.Authorization = `Bearer ${token}`
   return config
 })
 export default axios

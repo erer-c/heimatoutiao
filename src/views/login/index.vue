@@ -60,7 +60,7 @@ export default {
       this.$refs.myform.validate((isOK) => {
         if (isOK) {
           this.$axios.post('/authorizations', this.formData).then(res => {
-            window.localStorage.setItem('user-token', res.data.data.token)
+            window.localStorage.setItem('user-token', res.data.token)
             this.$router.push('/home')
           }).catch(() => {
             this.$message({

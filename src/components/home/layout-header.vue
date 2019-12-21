@@ -41,12 +41,12 @@ export default {
     }
   },
   created () {
-    var token = localStorage.getItem('user-token')
+    // var token = localStorage.getItem('user-token')//已经全局统一注入token，因为所有接口的token格式要求都是一样的
     this.$axios({
-      url: '/user/profile',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: '/user/profile'
+      // headers: {
+      //   Authorization: `Bearer ${token}`
+      // }
     }).then(res => {
       this.userInfo = res.data.data
     })

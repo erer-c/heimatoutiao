@@ -63,10 +63,10 @@ export default {
             window.localStorage.setItem('user-token', res.data.token)
             this.$router.push('/home')
           }).catch(() => {
-            this.$message({
-              type: 'warning',
-              message: '输入信息有误，请重新输入！'
-            })
+            // this.$message({
+            //   type: 'warning',
+            //   message: '输入信息有误，请重新输入！'
+            // })
           })
         }
       })

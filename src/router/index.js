@@ -19,6 +19,9 @@ export default new VueRouter({
     children: [{
       path: '',
       component: defaultHome
+    }, {
+      path: 'comment',
+      component: () => import('../views/comment')// 按需加载
     }]
   }]
 })

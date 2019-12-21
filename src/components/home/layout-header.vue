@@ -33,7 +33,7 @@ export default {
       if (command === 'userInfo') {
 
       } else if (command === 'gitURL') {
-        window.location.href('https://github.com/erer-c/heimatoutiao/commits/master')
+        window.location.href = 'https://github.com/erer-c/heimatoutiao/commits/master'
       } else {
         window.localStorage.removeItem('user-token')// 删除令牌
         this.$router.push('/login')

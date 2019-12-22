@@ -2,8 +2,8 @@
   <!-- 外层大容器 -->
   <el-container>
     <!-- 侧边栏 -->
-    <el-aside style="width:230px">
-      <layoutAside style="height:100vh;background-color: #353b4e;"></layoutAside>
+    <el-aside style="min-height:100vh;background-color: #353b4e;width:230px">
+      <layoutAside></layoutAside>
     </el-aside>
     <!-- 右边内容 -->
     <el-container>

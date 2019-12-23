@@ -20,7 +20,7 @@
                         <el-row class="icon" type='flex' justify='space-around' align='middle'>
                             <!-- 根据当前是否收藏的状态决定当前图标颜色 -->
                             <i @click="collectOrNot(item)" :style="{color:item.is_collected?'red':'#000'}" class="el-icon-star-on"></i>
-                            <i class="el-icon-delete-solid"></i>
+                            <i @click="deleteImg(item.id)" class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
                 </div>
@@ -66,6 +66,17 @@ export default {
         }
       }).then(res => {
         this.getMaterial()
+      })
+    },
+    // 删除素材
+    deleteImg (id) {
+      this.$confirm('确定要删除此文件吗').then(() => {
+        this.$axios({
+          method: 'delete',
+          url: `/user/images/${id}`
+        }).then(res => {
+          this.getMaterial()
+        })
       })
     },
     getMaterial () {

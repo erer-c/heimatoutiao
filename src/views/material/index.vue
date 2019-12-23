@@ -1,10 +1,15 @@
 <template>
-    <el-card>
+    <el-card v-model="loading">
         <breadcrumb slot="header">
             <template slot="nav">
                 素材管理
             </template>
         </breadcrumb>
+        <el-row type='flex' justify='end'>
+            <el-upload action='' :http-request='upload' :show-file-list='false'>
+                <el-button size="small" type="primary">上传素材</el-button>
+            </el-upload>
+        </el-row>
         <el-tabs v-model="activeName" @tab-click='changeTab'>
             <!-- 全部 -->
             <el-tab-pane label="全部素材" name='all'>
@@ -44,7 +49,8 @@ export default {
         total: 0,
         pageSize: 8,
         nowpage: 1
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -58,6 +64,21 @@ export default {
         }
       }).then(res => {
         this.list = res.data.results
+      })
+    },
+    // 上传图片
+    upload (params) {
+    //   alert(1)
+      let data = new FormData()
+      data.append('image', params.file)
+      this.loading = true
+      this.$axios({
+        method: 'post',
+        url: '/user/images',
+        data
+      }).then(res => {
+        this.loading = false
+        this.getMaterial()
       })
     },
     // 切换页签

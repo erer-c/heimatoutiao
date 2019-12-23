@@ -17,7 +17,9 @@
             </template>
           </el-table-column>
       </el-table>
-
+      <el-row type='flex' justify='center' style="height:60px" align='middle'>
+        <el-pagination background layout="prev, pager, next" :total="page.total" :page-size='pageSize' :current-page='page.nowpage' @current-change='changepage'></el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -25,16 +27,30 @@
 export default {
   data () {
     return {
-      list: []// 定义一个数据接收返回的结果
+      list: [], // 定义一个数据接收返回的结果
+      // 存放分页信息数据
+      page: {
+        total: 0, // 总页数
+        nowpage: 1, // 当前页
+        pageSize: 10// 每页条数
+      }
     }
   },
   methods: {
+    // 页码改变事件
+    changepage (newpage) {
+      // 把最新页码给到当前页码
+      this.page.nowpage = newpage
+      this.getcomment()
+    },
     getcomment () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' }
+        params: { response_type: 'comment', page: this.page.nowpage, per_page: this.page.pageSize }
       }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count
+        this.page.nowpage = res.data.page
       })
     },
     formatter (row, column, cellValue, index) {

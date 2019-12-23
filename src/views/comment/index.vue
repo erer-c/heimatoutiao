@@ -1,5 +1,7 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading"
+    :data="tableData"
+    style="width: 100%">
       <breadcrumb slot="header">
         <template slot="nav">
             评论管理
@@ -29,6 +31,7 @@ export default {
     return {
       list: [], // 定义一个数据接收返回的结果
       // 存放分页信息数据
+      loaing: false,
       page: {
         total: 0, // 总页数
         nowpage: 1, // 当前页
@@ -44,10 +47,12 @@ export default {
       this.getcomment()
     },
     getcomment () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.nowpage, per_page: this.page.pageSize }
       }).then(res => {
+        this.loading = false
         this.list = res.data.results
         this.page.total = res.data.total_count
         this.page.nowpage = res.data.page

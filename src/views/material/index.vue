@@ -27,6 +27,10 @@
                 </el-card>
             </div>
         </el-tabs>
+        <!-- 共用一个分页组件 -->
+        <el-row type='flex' justify='center' style="height:60px" align='middle'>
+            <el-pagination background layout="prev, pager, next" :total="page.total" :page-size='page.pageSize' :current-page='page.nowpage' @current-change='changepage'></el-pagination>
+        </el-row>
     </el-card>
 </template>
 
@@ -35,7 +39,12 @@ export default {
   data () {
     return {
       activeName: 'all',
-      list: []// 接受全部素材数据
+      list: [], // 接受全部素材数据
+      page: {
+        total: 0,
+        pageSize: 8,
+        nowpage: 1
+      }
     }
   },
   methods: {
@@ -43,14 +52,22 @@ export default {
       this.$axios({
         url: '/user/images',
         params: {
-          collect: this.activeName === 'collect'// true获取所有数据,false获取收藏数据
+          collect: this.activeName === 'collect', // true获取所有数据,false获取收藏数据
+          page: this.page.pageSize,
+          per_page: this.page.nowpage
         }
       }).then(res => {
         this.list = res.data.results
       })
     },
+    // 切换页签
     changeTab () {
+      // 切换页签时回到第一页
+      this.page.nowpage = 1
       this.getMaterial()
+    },
+    changepage (newpage) {
+      this.page.nowpage = newpage
     }
   },
   created () {

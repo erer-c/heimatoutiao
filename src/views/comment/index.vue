@@ -20,7 +20,7 @@
           </el-table-column>
       </el-table>
       <el-row type='flex' justify='center' style="height:60px" align='middle'>
-        <el-pagination background layout="prev, pager, next" :total="page.total" :page-size='pageSize' :current-page='page.nowpage' @current-change='changepage'></el-pagination>
+        <el-pagination background layout="prev, pager, next" :total="page.total" :page-size='page.pageSize' :current-page='page.nowpage' @current-change='changepage'></el-pagination>
       </el-row>
   </el-card>
 </template>

@@ -18,7 +18,8 @@
                     <el-card class="img-card" v-for='item in list' :key='item.id'>
                         <img :src="item.url" alt="">
                         <el-row class="icon" type='flex' justify='space-around' align='middle'>
-                            <i class="el-icon-star-on"></i>
+                            <!-- 根据当前是否收藏的状态决定当前图标颜色 -->
+                            <i @click="collectOrNot(item)" :style="{color:item.is_collected?'red':'#000'}" class="el-icon-star-on"></i>
                             <i class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
@@ -54,6 +55,19 @@ export default {
     }
   },
   methods: {
+    // 收藏
+    collectOrNot (item) {
+    //   alert(item.is_collected)
+      this.$axios({
+        method: 'put',
+        url: `/user/images/${item.id}`,
+        data: {
+          collect: !item.is_collected
+        }
+      }).then(res => {
+        this.getMaterial()
+      })
+    },
     getMaterial () {
       this.$axios({
         url: '/user/images',
@@ -118,6 +132,9 @@ export default {
             font-size: 18px;
             height: 30px;
             background-color: #f4f5f6;
+            i{
+                cursor: pointer;
+            }
         }
     }
 }

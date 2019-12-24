@@ -29,14 +29,14 @@
       <el-row class="total" type='flex' align='middle'>
           <span>共有10条相关文章</span>
       </el-row>
-      <div class="articleContent">
+      <div class="articleContent" v-for="item in list" :key="item.id.toString()">
           <!-- 左边 -->
           <div class="left">
-              <img src="../../assets/img/collect.png" alt="">
+              <img :src="item.cover.images.length?item.cover.images[0]:img" alt="">
               <div class="info">
-                  <span>哈哈哈哈哈哈</span>
-                  <el-tag class="tag">标签</el-tag>
-                  <span class="date">2019-12-24</span>
+                  <span>{{item.title}}</span>
+                  <el-tag class="tag" :type='item.status|filterType'>{{item.status|filterstatus}}</el-tag>
+                  <span class="date">{{item.pubdate}}</span>
               </div>
           </div>
           <!-- 右边 -->
@@ -58,21 +58,63 @@ export default {
         channel_id: null,
         dateRange: []
       },
-      channels: []// 频道数据
+      channels: [], // 频道数据
+      list: [], // 文章列表数据
+      img: require('../../assets/img/collect.png')// 动态图片
+    }
+  },
+  filters: {
+    filterstatus (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        default:
+          break
+      }
+    },
+    filterType (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        default:
+          break
+      }
     }
   },
   methods: {
-    getChennels () {
+    //   获取搜索数据
+    getChannels () {
       this.$axios({
         url: '/channels'
       }).then(res => {
         console.log(res.data)
         this.channels = res.data.channels
       })
+    },
+    // 获取文章列表数据
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(res => {
+        this.list = res.data.results
+      })
     }
   },
   created () {
-    this.getChennels()// 获取文章数据
+    this.getChannels()// 获取文章数据
+    this.getArticles()
   }
 }
 </script>

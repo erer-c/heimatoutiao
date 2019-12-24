@@ -25,6 +25,9 @@ export default new VueRouter({
     }, {
       path: 'material',
       component: () => import('../views/material')
+    }, {
+      path: 'articles',
+      component: () => import('../views/content')
     }]
   }]
 })

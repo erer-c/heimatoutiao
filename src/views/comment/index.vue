@@ -1,6 +1,5 @@
 <template>
   <el-card v-loading="loading"
-    :data="tableData"
     style="width: 100%">
       <breadcrumb slot="header">
         <template slot="nav">

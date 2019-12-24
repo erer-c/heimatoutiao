@@ -19,19 +19,20 @@
                         <img :src="item.url" alt="">
                         <el-row class="icon" type='flex' justify='space-around' align='middle'>
                             <!-- 根据当前是否收藏的状态决定当前图标颜色 -->
-                            <i @click="collectOrNot(item)" :style="{color:item.is_collected?'red':'#000'}" class="el-icon-star-on"></i>
+                            <i @click="collectOrNot(item)" :style="{color:item.is_collected ? 'red' : '#000'}" class="el-icon-star-on"></i>
                             <i @click="deleteImg(item.id)" class="el-icon-delete-solid"></i>
                         </el-row>
                     </el-card>
                 </div>
             </el-tab-pane>
             <!-- 收藏 -->
-            <el-tab-pane label="我的收藏" name='collect'></el-tab-pane>
+            <el-tab-pane label="我的收藏" name='collect'>
             <div class="imgList">
                 <el-card class="img-card" v-for='item in list' :key='item.id'>
                     <img :src="item.url" alt="">
                 </el-card>
             </div>
+            </el-tab-pane>
         </el-tabs>
         <!-- 共用一个分页组件 -->
         <el-row type='flex' justify='center' style="height:60px" align='middle'>
@@ -62,7 +63,7 @@ export default {
         method: 'put',
         url: `/user/images/${item.id}`,
         data: {
-          collect: !item.is_collected
+          collect: !item.is_collected// 是否收藏
         }
       }).then(res => {
         this.getMaterial()
@@ -79,16 +80,19 @@ export default {
         })
       })
     },
+    // 获取素材
     getMaterial () {
       this.$axios({
         url: '/user/images',
         params: {
           collect: this.activeName === 'collect', // true获取所有数据,false获取收藏数据
-          page: this.page.pageSize,
-          per_page: this.page.nowpage
+          page: this.page.nowpage,
+          per_page: this.page.pageSize
         }
       }).then(res => {
+        // console.log(res.data)
         this.list = res.data.results
+        this.page.total = res.data.total_count// 总页数赋值给当前总页数
       })
     },
     // 上传图片
@@ -112,8 +116,10 @@ export default {
       this.page.nowpage = 1
       this.getMaterial()
     },
+    // 页面改变事件
     changepage (newpage) {
       this.page.nowpage = newpage
+      this.getMaterial()
     }
   },
   created () {

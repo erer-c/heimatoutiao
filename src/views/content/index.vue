@@ -27,7 +27,7 @@
           </el-form-item>
       </el-form>
       <el-row class="total" type='flex' align='middle'>
-          <span>共有10条相关文章</span>
+          <span>共有{{page.total}}条相关文章</span>
       </el-row>
       <div class="articleContent" v-for="item in list" :key="item.id.toString()">
           <!-- 左边 -->
@@ -45,6 +45,10 @@
               <i class="el-icon-delete">删除</i>
           </div>
       </div>
+      <!-- 分页 -->
+      <el-row type='flex' justify='center' align='middle' style="height:60px">
+        <el-pagination layout="prev, pager, next" :total="page.total" :current-page='page.currentPage' :page-size='page.pageSize' @current-change='changePagination'></el-pagination>
+      </el-row>
   </el-card>
 </template>
 
@@ -52,6 +56,12 @@
 export default {
   data () {
     return {
+      // 分页数据
+      page: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10
+      },
       // 搜索表单数据
       searchForm: {
         status: 5,
@@ -105,6 +115,23 @@ export default {
         this.channels = res.data.channels
       })
     },
+    // 获取搜索+分页数据
+    changeArticles () {
+      let params = {
+        page: this.page.currentPage,
+        per_page: this.page.pages,
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        begin_pubdate: this.searchForm.dateRange.length > 0 ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+      }
+      this.getArticles(params)
+    },
+    // 分页改变页码
+    changePagination (newpage) {
+      this.page.currentPage = newpage
+      this.changeArticles()
+    },
     // 获取文章列表数据
     getArticles (params) {
       this.$axios({
@@ -112,17 +139,13 @@ export default {
         params
       }).then(res => {
         this.list = res.data.results
+        this.page.total = res.data.total_count// 获取总页数赋值给当前总页数
       })
     },
     changeCondition () {
       // alert(this.searchForm.status)
-      let params = {
-        status: this.searchForm.status === 5 ? null : this.searchForm.status,
-        channel_id: this.searchForm.channel_id,
-        begin_pubdate: this.searchForm.dateRange.length > 0 ? this.searchForm.dateRange[0] : null,
-        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
-      }
-      this.getArticles(params)
+      this.page.currentPage = 1
+      this.changeArticles()
     }
   },
   created () {

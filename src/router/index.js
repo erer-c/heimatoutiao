@@ -28,6 +28,9 @@ export default new VueRouter({
     }, {
       path: 'articles',
       component: () => import('../views/content')
+    }, {
+      path: 'publish',
+      component: () => import('../views/publish')
     }]
   }]
 })

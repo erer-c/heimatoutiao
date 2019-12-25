@@ -7,7 +7,7 @@
           <el-form-item label='文章状态 :'>
               <!-- 单选组 -->
               <!-- 双向绑定，默认选中全部 -->
-            <el-radio-group v-model="searchForm.status">
+            <el-radio-group v-model="searchForm.status" @change="changeCondition">
                 <el-radio :label='5'>全部</el-radio>
                 <el-radio :label='0'>草稿</el-radio>
                 <el-radio :label='1'>待审核</el-radio>
@@ -17,13 +17,13 @@
           </el-form-item>
           <el-form-item label='频道列表 :'>
               <!-- select选择器 -->
-              <el-select placeholder='请选择频道' v-model="searchForm.channel_id">
+              <el-select placeholder='请选择频道' v-model="searchForm.channel_id" @change="changeCondition">
                   <el-option v-for="item in channels" :key="item.id" :value='item.id' :label='item.name'></el-option>
               </el-select>
           </el-form-item>
           <el-form-item label='时间选择 :'>
               <!-- 日期选择器 -->
-              <el-date-picker type="daterange" range-separator="-" v-model="searchForm.dateRange"></el-date-picker>
+              <el-date-picker value-format='yyyy-MM-dd' type="daterange" range-separator="-" v-model="searchForm.dateRange" @change="changeCondition"></el-date-picker>
           </el-form-item>
       </el-form>
       <el-row class="total" type='flex' align='middle'>
@@ -35,7 +35,7 @@
               <img :src="item.cover.images.length?item.cover.images[0]:img" alt="">
               <div class="info">
                   <span>{{item.title}}</span>
-                  <el-tag class="tag" :type='item.status|filterType'>{{item.status|filterstatus}}</el-tag>
+                  <el-tag class="tag" :type='item.status | filterType'>{{item.status|filterstatus}}</el-tag>
                   <span class="date">{{item.pubdate}}</span>
               </div>
           </div>
@@ -56,7 +56,7 @@ export default {
       searchForm: {
         status: 5,
         channel_id: null,
-        dateRange: []
+        dateRange: []// 日期范围
       },
       channels: [], // 频道数据
       list: [], // 文章列表数据
@@ -64,6 +64,7 @@ export default {
     }
   },
   filters: {
+    //  过滤状态
     filterstatus (value) {
       switch (value) {
         case 0:
@@ -78,6 +79,7 @@ export default {
           break
       }
     },
+    // 过滤类型
     filterType (value) {
       switch (value) {
         case 0:
@@ -104,12 +106,23 @@ export default {
       })
     },
     // 获取文章列表数据
-    getArticles () {
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(res => {
         this.list = res.data.results
       })
+    },
+    changeCondition () {
+      // alert(this.searchForm.status)
+      let params = {
+        status: this.searchForm.status === 5 ? null : this.searchForm.status,
+        channel_id: this.searchForm.channel_id,
+        begin_pubdate: this.searchForm.dateRange.length > 0 ? this.searchForm.dateRange[0] : null,
+        end_pubdate: this.searchForm.dateRange.length > 1 ? this.searchForm.dateRange[1] : null
+      }
+      this.getArticles(params)
     }
   },
   created () {

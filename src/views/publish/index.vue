@@ -14,13 +14,14 @@
                 :rows="4"></el-input>
           </el-form-item>
           <el-form-item prop='cover' label="封面">
-              <el-radio-group v-model="formData.cover.type">
+              <el-radio-group v-model="formData.cover.type" @change="listenType">
                   <el-radio :label='1'>单图</el-radio>
                   <el-radio :label='3'>三图</el-radio>
                   <el-radio :label='0'>无图</el-radio>
                   <el-radio :label='-1'>自动</el-radio>
               </el-radio-group>
           </el-form-item>
+          <coverImg :imageList='formData.cover.images'></coverImg>
           <el-form-item prop='channel_id' label="频道">
               <el-select v-model="formData.channel_id">
                   <!-- 遍历channels -->
@@ -78,8 +79,19 @@ export default {
           }
         }
       }
-    },
-    'formData.cover.type': function () {
+    }
+    // 'formData.cover.type': function () {
+    //   if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+    //     this.formData.cover.images = []
+    //   } else if (this.formData.cover.type === 1) {
+    //     this.formData.cover.images = ['']
+    //   } else if (this.formData.cover.type === 3) {
+    //     this.formData.cover.images = ['', '', '']
+    //   }
+    // }
+  },
+  methods: {
+    listenType () {
       if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
         this.formData.cover.images = []
       } else if (this.formData.cover.type === 1) {
@@ -87,9 +99,7 @@ export default {
       } else if (this.formData.cover.type === 3) {
         this.formData.cover.images = ['', '', '']
       }
-    }
-  },
-  methods: {
+    },
     getChannels () {
       this.$axios({
         url: '/channels'

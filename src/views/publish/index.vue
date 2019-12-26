@@ -78,6 +78,15 @@ export default {
           }
         }
       }
+    },
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      }
     }
   },
   methods: {

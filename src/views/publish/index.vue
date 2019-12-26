@@ -62,6 +62,24 @@ export default {
       channels: []// 获取频道数据
     }
   },
+  //   监听route对象变化,处理俩个地址对应同一个组件时，组件不销毁，但内容未重置的问题
+  watch: {
+    $route (to, from) {
+      // 如果有article_id是修改，否则是发表（发表信息设为初始值）
+      if (to.params.articleId) {
+
+      } else {
+        this.formData = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0, // 封面类型 -1:自动，0-无图，1-1张，3-3张
+            images: []
+          }
+        }
+      }
+    }
+  },
   methods: {
     getChannels () {
       this.$axios({
@@ -88,10 +106,19 @@ export default {
           })
         }
       })
+    },
+    getModifyContent (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(res => {
+        this.formData = res.data// 把获取的当前内容的data赋值给定义的数据
+      })
     }
   },
   created () {
     this.getChannels()
+    let{ articleId } = this.$route.params
+    articleId && this.getModifyContent(articleId)// 如果id存在直接查询当前要修改文章的数据
   }
 }
 </script>

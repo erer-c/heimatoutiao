@@ -41,7 +41,7 @@
           </div>
           <!-- 右边 -->
           <div class="right">
-              <i class="el-icon-edit">修改</i>
+              <i class="el-icon-edit" @click="toModify(item.id)">修改</i>
               <i class="el-icon-delete">删除</i>
           </div>
       </div>
@@ -106,6 +106,10 @@ export default {
     }
   },
   methods: {
+    // 点击修改跳转到发表文章
+    toModify (id) {
+      this.$router.push(`/home/publish/${id.toString()}`)
+    },
     //   获取搜索数据
     getChannels () {
       this.$axios({

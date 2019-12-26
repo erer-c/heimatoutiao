@@ -29,8 +29,11 @@ export default new VueRouter({
       path: 'articles',
       component: () => import('../views/content')
     }, {
-      path: 'publish',
+      path: 'publish', // 发表文章
       component: () => import('../views/publish')
+    }, {
+      path: 'publish/:articleId', // 修改文章
+      component: () => import('../views/publish')// 同一组件
     }]
   }]
 })

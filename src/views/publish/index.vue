@@ -91,10 +91,11 @@ export default {
     // 自定义校验
     publishArticles (draft) {
       this.$refs.publishForm.validate((isOK) => {
-        if (isOK) {
+        if (isOK) { // 判断是修改文章还是发表文章
+          let{ articleId } = this.$route.params
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
             params: { draft },
             data: this.formData
           }).then(() => {
@@ -104,6 +105,33 @@ export default {
             })
             this.$router.push('/home/articles')
           })
+        //   if (articleId) { // 有id说明是修改
+        //     this.$axios({
+        //       url: `/articles/${articleId}`,
+        //       method: 'put',
+        //       params: { draft },
+        //       data: this.formData
+        //     }).then(() => {
+        //       this.$message({
+        //         type: 'success',
+        //         message: '保存成功！'
+        //       })
+        //       this.$router.push('/home/articles')
+        //     })
+        //   } else {
+        //     this.$axios({
+        //       url: '/articles',
+        //       method: 'post',
+        //       params: { draft },
+        //       data: this.formData
+        //     }).then(() => {
+        //       this.$message({
+        //         type: 'success',
+        //         message: '保存成功！'
+        //       })
+        //       this.$router.push('/home/articles')
+        //     })
+        //   }
         }
       })
     },

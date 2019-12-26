@@ -28,8 +28,8 @@
               </el-select>
           </el-form-item>
           <el-form-item>
-              <el-button type='primary' @click="publishArticles">发布</el-button>
-              <el-button @click="publishArticles">存入草稿</el-button>
+              <el-button type='primary' @click="publishArticles()">发布</el-button> <!--不传参数默认undefined，===false -->
+              <el-button @click="publishArticles(true)">存入草稿</el-button>
           </el-form-item>
       </el-form>
   </el-card>
@@ -71,9 +71,22 @@ export default {
       })
     },
     // 自定义校验
-    publishArticles () {
+    publishArticles (draft) {
       this.$refs.publishForm.validate((isOK) => {
-
+        if (isOK) {
+          this.$axios({
+            url: '/articles',
+            method: 'post',
+            params: { draft },
+            data: this.formData
+          }).then(() => {
+            this.$message({
+              type: 'success',
+              message: '保存成功！'
+            })
+            this.$router.push('/home/articles')
+          })
+        }
       })
     }
   },

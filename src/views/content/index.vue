@@ -42,7 +42,7 @@
           <!-- 右边 -->
           <div class="right">
               <i class="el-icon-edit" @click="toModify(item.id)">修改</i>
-              <i class="el-icon-delete">删除</i>
+              <i class="el-icon-delete" @click="delcontent(item.id)">删除</i>
           </div>
       </div>
       <!-- 分页 -->
@@ -106,6 +106,21 @@ export default {
     }
   },
   methods: {
+    // 点击删除文章
+    delcontent (id) {
+      this.$confirm('确定要删除此条文章吗').then(() => {
+        this.$axios({
+          url: `/articles/${id.toString()}`,
+          method: 'delete'
+        }).then(res => {
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        })
+        this.changeArticles()
+      })
+    },
     // 点击修改跳转到发表文章
     toModify (id) {
       this.$router.push(`/home/publish/${id.toString()}`)

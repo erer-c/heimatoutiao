@@ -40,5 +40,6 @@ axios.interceptors.response.use(function (response) {
       break
   }
   Message({ type: 'warning', message })
+  return Promise.reject(error)// 延续错误处理，就会进入到catch
 })
 export default axios

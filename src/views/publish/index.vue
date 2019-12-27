@@ -8,12 +8,9 @@
               <el-input v-model="formData.title" style="width:60%"></el-input>
           </el-form-item>
           <el-form-item prop='content' label="内容">
-                 <el-input
-                 v-model="formData.content"
-                 type="textarea"
-                :rows="4"></el-input>
+                 <quillEditor style="height:300px" v-model="formData.content"></quillEditor>
           </el-form-item>
-          <el-form-item prop='cover' label="封面">
+          <el-form-item style="margin-top:120px" prop='cover' label="封面">
               <el-radio-group v-model="formData.cover.type" @change="listenType">
                   <el-radio :label='1'>单图</el-radio>
                   <el-radio :label='3'>三图</el-radio>
@@ -21,7 +18,7 @@
                   <el-radio :label='-1'>自动</el-radio>
               </el-radio-group>
           </el-form-item>
-          <coverImg :imageList='formData.cover.images'></coverImg>
+          <coverImg @forGrandfather='grandfatherReceive' :imageList='formData.cover.images'></coverImg>
           <el-form-item prop='channel_id' label="频道">
               <el-select v-model="formData.channel_id">
                   <!-- 遍历channels -->
@@ -91,6 +88,16 @@ export default {
     // }
   },
   methods: {
+    // 接收子组件传来的图片地址
+    grandfatherReceive (url, index) {
+      // alert(url, index)
+      this.formData.cover.images = this.formData.cover.images.map((item, i) => {
+        if (index === i) {
+          return url// 说明找到了要替换的值
+        }
+        return item
+      })
+    },
     listenType () {
       if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
         this.formData.cover.images = []
@@ -109,6 +116,7 @@ export default {
     },
     // 自定义校验
     publishArticles (draft) {
+      // console.log(this.$refs.publishForm)
       this.$refs.publishForm.validate((isOK) => {
         if (isOK) { // 判断是修改文章还是发表文章
           let{ articleId } = this.$route.params

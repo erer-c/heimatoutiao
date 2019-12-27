@@ -34,6 +34,9 @@ export default new VueRouter({
     }, {
       path: 'publish/:articleId', // 修改文章
       component: () => import('../views/publish')// 同一组件
+    }, {
+      path: 'account',
+      component: () => import('../views/account')
     }]
   }]
 })

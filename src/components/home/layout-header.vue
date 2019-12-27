@@ -31,7 +31,7 @@ export default {
   methods: {
     clickPullDown (command) {
       if (command === 'userInfo') {
-
+        this.$router.push('/home/account')// 去到账户信息
       } else if (command === 'gitURL') {
         window.location.href = 'https://github.com/erer-c/heimatoutiao/commits/master'
       } else {

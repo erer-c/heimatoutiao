@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading='loading'>
       <breadcrumb slot="header">
         <template slot="nav">账户信息</template>
       </breadcrumb>
@@ -22,7 +22,7 @@
            </el-form-item>
       </el-form>
       <!-- 上传组件 -->
-      <el-upload class='head-upload' action="" :show-file-list="false">
+      <el-upload :http-request='uploadImg' class='head-upload' action="" :show-file-list="false">
           <img :src="userInfo.photo?userInfo.photo:defaultImg" alt="">
       </el-upload>
   </el-card>
@@ -38,6 +38,7 @@ export default {
         email: '',
         photo: ''
       },
+      loading: false,
       defaultImg: require('../../assets/img/home.jpg'),
       rules: {
         name: [{ required: true, message: '用户名不能为空' }, { min: 1, max: 7, message: '用户名为1-7个字符' }],
@@ -46,6 +47,21 @@ export default {
     }
   },
   methods: {
+    // 上传用户头像
+    uploadImg (params) {
+    //   console.log(params)
+      this.loading = true
+      let data = new FormData()
+      data.append('photo', params.file)
+      this.$axios({
+        url: '/user/photo',
+        method: 'patch',
+        data
+      }).then(res => {
+        this.loading = false
+        this.userInfo.photo = res.data.photo
+      })
+    },
     // 获取个人信息
     getUserInfo () {
       this.$axios({
@@ -54,6 +70,7 @@ export default {
         this.userInfo = res.data
       })
     },
+    // 保存用户信息
     saveInfo () {
       this.$axios({
         url: '/user/profile',

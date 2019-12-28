@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import eventBus from '../../utills/eventBus'
 export default {
   data () {
     return {
@@ -60,6 +61,7 @@ export default {
       }).then(res => {
         this.loading = false
         this.userInfo.photo = res.data.photo
+        eventBus.$emit('syncInfo')
       })
     },
     // 获取个人信息
@@ -81,6 +83,8 @@ export default {
           type: 'success',
           message: '保存成功'
         })
+        // 此时已保存成功
+        eventBus.$emit('syncInfo')
       })
     }
   },
